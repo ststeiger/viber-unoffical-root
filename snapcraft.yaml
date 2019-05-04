@@ -1,0 +1,99 @@
+name: viber-unofficial-root
+base: core18
+version: '1.0' 
+summary: Unofficial snap for Viber Desktop
+description: |
+  Viber is a calling and messaging app that connects people–no matter who they are, or where they’re from.
+  With a free and secure connection, over 1 billion users worldwide communicate with their loved ones 
+  through high-quality audio and video calls, messaging, and much more. All Viber calls and chats are
+  protected by built-in end-to-end encryption, so you can be sure that your conversations are always secure.
+
+grade: devel
+confinement: devmode
+  
+# grade: stable
+# confinement: strict
+
+
+parts:
+ 
+ # https://github.com/ubuntu/snapcraft-desktop-helpers/blob/master/snapcraft.yaml#L258
+  desktop-glib-only:
+    source: .
+    source-subdir: glib-only
+    plugin: make
+    build-packages:
+      - libglib2.0-dev
+    stage-packages:
+      - libglib2.0-bin
+ 
+  viber:
+    plugin: dump
+    # https://forum.snapcraft.io/t/rust-plugin-build-attributes-question-failing-validation/11112
+    # The execstacks are going to be cleared for the following files:
+    #     - /root/build_viber-unofficial-root/prime/opt/viber/lib/libQt5WebEngineCore.so.5
+    # To disable this behavior set `build-attributes:  ` for the part.
+    build-attributes: [keep-execstack]
+    source: http://download.cdn.viber.com/cdn/desktop/Linux/viber.deb
+    source-type: deb
+    after: [desktop-glib-only]
+    stage-packages:
+      - libxss1
+      - libssl1.0.0
+      - libpulse0
+      - libpulse-mainloop-glib0
+      - libasound2
+      - libnss3
+      - libxcomposite1
+      - libxcursor1
+      - libxdamage1
+      - libcurl3
+      - libgstreamer-plugins-base1.0-0
+      - libgstreamer1.0-0
+      - libsm6
+      - libxi6
+      - libxtst6
+      - libxrandr2
+      - libegl1-mesa
+      - libxcb-xkb1
+      - libxcb-render-util0
+      - libxcb-xfixes0
+      - libxcb-randr0
+      - libxcb-image0
+      - libxcb-keysyms1
+      - libxcb-icccm4
+      - libxcb-shape0
+      - libxcb-util1
+      - libpci3
+      - gstreamer1.0-plugins-base
+      - gstreamer1.0-plugins-good
+      - gstreamer1.0-plugins-ugly
+      - gstreamer1.0-pulseaudio
+      - gstreamer1.0-libav
+      - libgpm2
+      - libxslt1.1
+      # - qt5dxcb-plugin 
+apps:
+  viber:
+    command: desktop-launch $SNAP/opt/viber/Viber
+    desktop: usr/share/applications/viber.desktop
+    plugs: 
+     - home
+     - unity7
+     - opengl
+     - gsettings
+     - network
+     - network-bind
+     - x11
+     - wayland
+     - desktop
+     - desktop-legacy
+     - pulseaudio
+     - camera
+    environment:
+      # DISABLE_WAYLAND: 1
+      QTWEBENGINE_DISABLE_SANDBOX: 1
+      QT_DEBUG_PLUGINS: 1
+      QT_XKB_CONFIG_ROOT: $SNAP/usr/share/X11/xkb
+      WAYLAND_DISPLAY: no-display
+      QTCOMPOSE: $SNAP/usr/share/X11/locale 
