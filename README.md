@@ -27,7 +27,7 @@ lxd init
 (accept defaults)
 export SNAPCRAFT_BUILD_ENVIRONMENT=lxd 
 snapcraft cleanbuild
-sudo snap install --devmode viber-unofficial-root_0.1_amd64.snap
+sudo snap install --devmode ./viber-unofficial-root_1.0_amd64.snap
 ```
 
 
