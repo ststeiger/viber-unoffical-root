@@ -4,11 +4,12 @@
 ## Installation: 
 ```
 snap install snapcraft
+snap install multipass
 
 sudo addgroup --system lxd
 sudo adduser $USER lxd
 sudo snap install lxd --channel=candidate
-snap install multipass
+
 ```
 
 ## Build snap:
